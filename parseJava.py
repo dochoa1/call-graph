@@ -3,6 +3,23 @@ File used to parse Java 8 source code and create a call graph.
 """
 
 import javalang
+import networkx as nx
+import matplotlib.pyplot as plt
+
+def visualize_call_graph(call_graph):
+    G = nx.DiGraph()
+
+    for callee_method_name, called_methods in call_graph.items():
+        G.add_node(callee_method_name)
+        for called_method_name in called_methods:
+            G.add_edge(callee_method_name, called_method_name)
+
+    pos = nx.spring_layout(G)
+    nx.draw(G, pos, font_size=16, with_labels=False)
+    for p in pos:  # Raise text positions
+        pos[p][1] += 0.1
+    nx.draw_networkx_labels(G, pos)
+    plt.show()
 
 with open("sampleJava.java") as javaFile:
     javaCode = javaFile.read()
@@ -27,3 +44,4 @@ with open("sampleJava.java") as javaFile:
             javaMethodCalls[javaMethodDeclaration.name] = definedMethodsCalled
 
         print(javaMethodCalls)
+        visualize_call_graph(javaMethodCalls)

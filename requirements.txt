@@ -1,2 +1,4 @@
 javalang==0.11.0
 six==1.11.0
+matplotlib==2.0.2
+networkx==2.1
