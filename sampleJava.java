@@ -4,6 +4,8 @@
 
 public class CallingMethodsInSameClass {
 
+	private final int index;
+
 	public static void main(String[] args) {
 		printOne();
 		printOne();
