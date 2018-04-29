@@ -4,6 +4,8 @@ File used to parse Java 8 source code and create a call graph.
 
 import javalang
 import networkx as nx
+import matplotlib as mpl
+mpl.use('TkAgg')  # Configuring matplotlib back-end
 import matplotlib.pyplot as plt
 
 def visualize_call_graph(call_graph):
@@ -23,9 +25,9 @@ def visualize_call_graph(call_graph):
 
 def construct_declarations_dictionary(declarations):
     declarations_dict = {
-    "MethodDeclaration": [],
-    "FieldDeclaration": []
-    }
+                        "MethodDeclaration": [],
+                        "FieldDeclaration": []
+                        }
 
     for declaration in declarations:
         if isinstance(declaration, javalang.tree.MethodDeclaration):
