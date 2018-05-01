@@ -5,6 +5,8 @@ File used to parse Java 8 source code and create a call graph.
 import javalang
 import networkx as nx
 import matplotlib as mpl
+from Method import Method
+from AccessModifier import AccessModifier
 mpl.use('TkAgg')  # Configuring matplotlib back-end
 import matplotlib.pyplot as plt
 
@@ -36,35 +38,49 @@ def construct_declarations_dictionary(declarations):
             declarations_dict["FieldDeclaration"].append(declaration)
     return declarations_dict
 
-def construct_call_graph(method_declarations):
-    method_declaration_names = {x.name for x in method_declarations}
+def construct_class_dict(declarations, class_name):
 
-    method_calls = {}  # Methods name is key, set of methods name that method calls is value
+    class_dict = {
+                    "defined_methods": [],
+                    "called_methods": {},
+                    "properties": []
+                 }
+
+    declarations_dict = construct_declarations_dictionary(declarations)  # Intermediate data structure meant for parsing methods of a class
+    method_declarations = declarations_dict["MethodDeclaration"]
+
     for method_declaration in method_declarations:
-        called_methods = set() # initialize with empty set
 
+        # First add method to defined methods
+        # TODO: Fill in modifier parameters
+        # method_declaration attrs: ['documentation', 'modifiers', 'annotations', 'type_parameters', 'return_type', 'name', 'parameters', 'throws', 'body']
+        # Method Initializer: def __init__(self, name, class_name, is_final, is_static, access_modifier, parameter_types):
+        method = Method(method_declaration.name, class_name, False, False, AccessModifier.PUBLIC, [])
+        class_dict["defined_methods"].append(method)
+
+        # Now figure out which methods this method calls and add to called_methods
+        class_dict["called_methods"][method.name] = set()
         for method_expressions in method_declaration.body:  # The statements/expressions that make up a method
             expression = method_expressions.expression
 
             if isinstance(expression, javalang.tree.MethodInvocation):  # For each statement that invokes a method
-                if expression.member in method_declaration_names:  # compare to names because member =/= javaMethodDeclaration
-                    called_methods.add(expression.member)  # added only if method was defined by java_class
-        method_calls[method_declaration.name] = called_methods
-    return method_calls
+                # if expression.member in method_declaration_names:  # compare to names because member =/= javaMethodDeclaration
+                class_dict["called_methods"][method.name].add(expression.member)
+    return class_dict
+
 
 with open("sampleJava.java") as java_file:
     java_code = java_file.read()
     tree = javalang.parse.parse(java_code)  # A CompilationUnit (root of AST)
-    java_classes = tree.types  # Our sample only has one class
+    java_classes = tree.types # Our sample only has one class
+
+    graph_dict = {}
 
     for java_class in java_classes:  # Assumes class is not calling methods from other class
         declarations_list = java_class.body  # The declarations in each class as a list
 
-        # Dictionary to store a list of declarations for each declaration type
-        declarations_dict = construct_declarations_dictionary(declarations_list)
-        method_declarations = declarations_dict["MethodDeclaration"]
-        method_calls = construct_call_graph(method_declarations)
+        class_dict = construct_class_dict(declarations_list, java_class.name)
+        graph_dict[java_class.name] = class_dict
 
-        print(declarations_dict)
-        print(method_calls)
-        visualize_call_graph(method_calls)
+        print(graph_dict)
+        visualize_call_graph(class_dict["called_methods"])

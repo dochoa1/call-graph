@@ -1,0 +1,29 @@
+
+Method Class:
+
+name
+class_name
+is_final
+is_static
+access_level
+parameter_types
+
+Access_Modifier Enum:
+
+public
+protected
+package-private
+private
+
+
+Dictionary Graph Data Structure
+
+{
+	“ClassName” : {
+		"defined_methods": [Method],
+		"called_methods": {
+			"method_name": Set(method_names)
+		},
+		"properties": []
+	}
+}
