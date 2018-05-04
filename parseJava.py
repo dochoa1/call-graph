@@ -62,15 +62,20 @@ def construct_class_dict(declarations, class_name):
         # Now figure out which methods this method calls and add to called_methods
         class_dict["called_methods"][method.name] = set()
         for method_expressions in method_declaration.body:  # The statements/expressions that make up a method
-            expression = method_expressions.expression
 
-            if isinstance(expression, javalang.tree.MethodInvocation):  # For each statement that invokes a method
-                # if expression.member in method_declaration_names:  # compare to names because member =/= javaMethodDeclaration
-                class_dict["called_methods"][method.name].add(expression.member)
+            try:
+                expression = method_expressions.expression
+
+                if isinstance(expression, javalang.tree.MethodInvocation):  # For each statement that invokes a method
+                    # if expression.member in method_declaration_names:  # compare to names because member =/= javaMethodDeclaration
+                    class_dict["called_methods"][method.name].add(expression.member)
+            except AttributeError:
+                pass
     return class_dict
 
 
-for filename in glob.glob('*.java'):
+for filename in glob.glob('StevenBreakout/*.java'):
+    print(f'Processing {filename}')
 
     with open(filename) as java_file:
         java_code = java_file.read()
