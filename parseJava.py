@@ -9,6 +9,7 @@ from Method import Method
 from AccessModifier import AccessModifier
 mpl.use('TkAgg')  # Configuring matplotlib back-end
 import matplotlib.pyplot as plt
+import glob
 
 def visualize_call_graph(call_graph):
     G = nx.DiGraph()  # Directed graph
@@ -69,18 +70,20 @@ def construct_class_dict(declarations, class_name):
     return class_dict
 
 
-with open("sampleJava.java") as java_file:
-    java_code = java_file.read()
-    tree = javalang.parse.parse(java_code)  # A CompilationUnit (root of AST)
-    java_classes = tree.types # Our sample only has one class
+for filename in glob.glob('*.java'):
 
-    graph_dict = {}
+    with open(filename) as java_file:
+        java_code = java_file.read()
+        tree = javalang.parse.parse(java_code)  # A CompilationUnit (root of AST)
+        java_classes = tree.types # Our sample only has one class
 
-    for java_class in java_classes:  # Assumes class is not calling methods from other class
-        declarations_list = java_class.body  # The declarations in each class as a list
+        graph_dict = {}
 
-        class_dict = construct_class_dict(declarations_list, java_class.name)
-        graph_dict[java_class.name] = class_dict
+        for java_class in java_classes:  # Assumes class is not calling methods from other class
+            declarations_list = java_class.body  # The declarations in each class as a list
 
-        print(graph_dict)
-        visualize_call_graph(class_dict["called_methods"])
+            class_dict = construct_class_dict(declarations_list, java_class.name)
+            graph_dict[java_class.name] = class_dict
+
+            print(graph_dict)
+            visualize_call_graph(class_dict["called_methods"])
