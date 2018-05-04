@@ -22,7 +22,7 @@ Dictionary Graph Data Structure
 	“ClassName” : {
 		"defined_methods": [Method],
 		"called_methods": {
-			"method_name": Set(method_names)
+			"method_id": Set(method_ids)
 		},
 		"properties": []
 	}

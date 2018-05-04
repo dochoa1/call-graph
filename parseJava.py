@@ -60,7 +60,7 @@ def construct_class_dict(declarations, class_name):
         class_dict["defined_methods"].append(method)
 
         # Now figure out which methods this method calls and add to called_methods
-        class_dict["called_methods"][method.name] = set()
+        class_dict["called_methods"][method.id] = set()
         for method_expressions in method_declaration.body:  # The statements/expressions that make up a method
 
             try:
@@ -68,7 +68,26 @@ def construct_class_dict(declarations, class_name):
 
                 if isinstance(expression, javalang.tree.MethodInvocation):  # For each statement that invokes a method
                     # if expression.member in method_declaration_names:  # compare to names because member =/= javaMethodDeclaration
-                    class_dict["called_methods"][method.name].add(expression.member)
+
+                    # Debugging Help
+                    # print(expression.member)
+                    # print(expression.attrs)
+                    # print(expression.qualifier)
+                    # print(expression.selectors)
+                    # print(expression.type_arguments)
+                    # print(expression.arguments)
+                    # TODO: We need to figure out how to add the method id here but we can't
+                    # build it from the attributes of an expression
+                    # We could instead use the method name but a method name isn't unique because different
+                    # classes can have the same method name and methods can be overloaded with different arguments.
+                    # The qualifier attribute is a string that tells us the variable name of the object we are calling the method on.
+                    # We need to figure out the class of that object.
+                    # Also, the type_arguments provided by javalang here are super generic.
+                    # i.e. Cast, MemberReference, Literal, NumberReference.
+                    # I'm not sure how to solve this.
+                    # We probably need to do a pass where we build a data structure with all of the defined methods
+                    # in our program and then after that, work on the call graph.
+                    class_dict["called_methods"][method.id].add(expression.member)
             except AttributeError:
                 pass
     return class_dict
