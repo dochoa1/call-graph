@@ -11,8 +11,13 @@ import matplotlib.pyplot as plt
 import glob
 from collections import Iterable as Iterable
 from sys import argv
+import random
 
+# ---- Globals ----
 
+used_color_hexes = set()
+
+# ------------------------------------------------------------------------------
 # ---- Visualization ----
 
 def visualize_call_graph(G):
@@ -29,13 +34,27 @@ def visualize_call_graph(G):
 # ------------------------------------------------------------------------------
 # ----NetworkX ----
 
+def get_random__color():
+    r = lambda: random.randint(0,255)
+    return {'r': r(), 'g': r(), 'b': r(), 'a': 1}
+
+def color_to_hex(color):
+    return '#%02X%02X%02X' % (color['r'], color['g'], color['b'])
+
 def create_networkx_graph(graph_dict):
     G = nx.DiGraph()  # Directed graph
 
     for java_class, class_dict in graph_dict.items():
         call_graph = class_dict["called_methods"]
         for callee_method_name, called_methods in call_graph.items():
-            G.add_node(callee_method_name)
+
+            random_color = get_random__color()
+            while color_to_hex(random_color) in used_color_hexes:
+                random_color = get_random_color()
+            used_color_hexes.add(color_to_hex(random_color))
+
+            G.add_node(callee_method_name, viz={'color': random_color})
+
             for called_method_name in called_methods:
                 G.add_edge(callee_method_name, called_method_name)
     return G
@@ -129,13 +148,13 @@ def construct_class_dict(declarations, class_name, graph_dict):
     for method_declaration in method_declarations:
         method_id = create_method_id(class_name, method_declaration.name)
 
-        print(f'++++++++++++++++++++++++++++++++++++++++++++++++++++> {method_declaration.name} is declared.')
+        print(f'++++> {method_declaration.name} is declared.')
 
         # Now figure out which methods this method calls and add to called_methods
         class_dict["called_methods"][method_id] = construct_called_methods(class_name, graph_dict, set(), method_declaration.body)
 
 
-recursive_statements = {javalang.tree.WhileStatement, javalang.tree.BlockStatement, javalang.tree.IfStatement, javalang.tree.BinaryOperation, javalang.tree.Creator}
+recursive_statements = {javalang.tree.WhileStatement, javalang.tree.BlockStatement, javalang.tree.IfStatement, javalang.tree.BinaryOperation}
 
 
 def add_method(class_name, expression, graph_dict):
@@ -165,25 +184,24 @@ def construct_called_methods(class_name, graph_dict, called_methods, body):
             if isinstance(expression, javalang.tree.MethodInvocation):  # For each statement that invokes a method
                 called_methods.update(add_method(class_name, expression, graph_dict))
 
-            if isinstance(expression, javalang.tree.Assignment):
-                statement_attributes = [getattr(expression, attr) for attr in expression.attrs]
-                called_methods.update(construct_called_methods(class_name, graph_dict,
-                                                                called_methods, statement_attributes))
-
         except AttributeError:
             if isinstance(method_expression, javalang.tree.MethodInvocation):  # Sometimes expression is a MethodInvocation itself
                 called_methods.update(add_method(class_name, method_expression, graph_dict))
 
-            if isinstance(method_expression, tuple(recursive_statements)):
+            if type(method_expression) in recursive_statements:
                 print("Recursing into: {}".format(method_expression))
 
                 statement_attributes = [getattr(method_expression, attr) for attr in method_expression.attrs]
 
-                if isinstance(method_expression, (javalang.tree.WhileStatement, javalang.tree.IfStatement, javalang.tree.BinaryOperation)):
+                # Debugging
+                # if isinstance(method_expression, javalang.tree.IfStatement):
+                #     print(method_expression.condition)
+
+                if isinstance(method_expression, (javalang.tree.WhileStatement, javalang.tree.IfStatement)):
                     called_methods.update(construct_called_methods(class_name, graph_dict,
                                                                     called_methods, statement_attributes))
 
-                elif isinstance(method_expression, (javalang.tree.BlockStatement, javalang.tree.Creator)):
+                elif isinstance(method_expression, javalang.tree.BlockStatement):
                     called_methods.update(construct_called_methods(class_name, graph_dict,
                                                                     called_methods, flatten_attributes(statement_attributes)))
     return called_methods
