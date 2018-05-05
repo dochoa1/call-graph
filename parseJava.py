@@ -10,6 +10,7 @@ from AccessModifier import AccessModifier
 mpl.use('TkAgg')  # Configuring matplotlib back-end
 import matplotlib.pyplot as plt
 import glob
+from collections import Iterable as Iterable
 
 def visualize_call_graph(call_graph):
     """Takes a call graph and visualizes using matplotlib."""
@@ -85,6 +86,7 @@ def create_defined_methods_and_fields_dict(java_classes):
         graph_dict[java_class.name] = class_dict
         return graph_dict
 
+
 def construct_class_dict(declarations, class_name, graph_dict):
     """Parses method declarations in a class and adds called methods to the graph_dict.
     SIDE EFFECT: modifies graph_dict."""
@@ -101,30 +103,74 @@ def construct_class_dict(declarations, class_name, graph_dict):
         print(f'++++> {method_declaration.name} is declared.')
 
         # Now figure out which methods this method calls and add to called_methods
-        class_dict["called_methods"][temp_method.id] = set()
+        class_dict["called_methods"][temp_method.id] = construct_called_methods(class_name, graph_dict, set(), method_declaration.body)
 
-        # TODO: Iterating over the method_declaration.body is insufficient here.
-        # For instance, the run method has one expression which is a while statement.
-        # We need to have some kind of recursive parsing here to read what is inside the loop.
-        for method_expression in method_declaration.body:  # The statements/expressions that make up a method
 
-            try:
-                expression = method_expression.expression
-                if isinstance(expression, javalang.tree.MethodInvocation):  # For each statement that invokes a method
+recursive_statements = {javalang.tree.WhileStatement, javalang.tree.BlockStatement, javalang.tree.IfStatement, javalang.tree.BinaryOperation}
 
-                    # Okay,the goal for now is to just construct a sound call graph (not a precise one), so let's just add an
-                    # edge to all of the possible options. We can add CHA later to restrict how many edges are added
-                    matched_method_ids = get_methods_ids_that_match_name(expression.member, graph_dict)
 
-                    if len(matched_method_ids) == 0:  # Method may have been defined in super class. We are constructing a partial graph
-                        # FIXME: If we add parameters to ID, we'll have a problem here
-                        class_dict["called_methods"][temp_method.id].add(class_name + '.' + expression.member)
+# Utility function to because certain Statements are blocks with a list of statements as their attributes
+def flatten_attributes(l):
+    flattened_list = []
+    for elem in l:
+        if isinstance(elem, Iterable) and not isinstance(elem, (str, bytes)):
+            flattened_list.extend(elem)
+        elif elem is not None:
+            flattened_list.append(elem)
+    return flattened_list
 
-                    for matched_method_id in matched_method_ids:
-                        print("-----> Adding ", matched_method_id)
-                        class_dict["called_methods"][temp_method.id].add(matched_method_id)
-            except AttributeError:
-                continue
+
+def add_method(class_name, expression, graph_dict):
+    # Okay,the goal for now is to just construct a sound call graph (not a precise one), so let's just add an
+    # edge to all of the possible options. We can add CHA later to restrict how many edges are added
+    methods = set()
+
+    matched_method_ids = get_methods_ids_that_match_name(expression.member, graph_dict)
+
+    if len(matched_method_ids) == 0:  # Method may have been defined in super class. We are constructing a partial graph
+        # FIXME: If we add parameters to ID, we'll have a problem here
+        methods.add(class_name + '.' + expression.member)
+
+    for matched_method_id in matched_method_ids:
+        print("-----> Adding ", matched_method_id)
+        methods.add(matched_method_id)
+
+    return methods
+
+
+def construct_called_methods(class_name, graph_dict, called_methods, body):
+    # TODO: Iterating over the method_declaration.body is insufficient here.
+    # For instance, the run method has one expression which is a while statement.
+    # We need to have some kind of recursive parsing here to read what is inside the loop.
+
+    for method_expression in body:  # The statements/expressions that make up a method
+        try:
+            expression = method_expression.expression
+            if isinstance(expression, javalang.tree.MethodInvocation):  # For each statement that invokes a method
+                called_methods.update(add_method(class_name, expression, graph_dict))
+
+        except AttributeError:
+            if isinstance(method_expression, javalang.tree.MethodInvocation):  # Sometimes expression is a MethodInvocation itself
+                called_methods.update(add_method(class_name, method_expression, graph_dict))
+
+            if type(method_expression) in recursive_statements:
+                print("Recursing into: {}".format(method_expression))
+
+                statement_attributes = [getattr(method_expression, attr) for attr in method_expression.attrs]
+
+                # Debugging
+                # if isinstance(method_expression, javalang.tree.IfStatement):
+                #     print(method_expression.condition)
+
+                if isinstance(method_expression, (javalang.tree.WhileStatement, javalang.tree.IfStatement)):
+                    called_methods.update(construct_called_methods(class_name, graph_dict,
+                                                                    called_methods, statement_attributes))
+
+                elif isinstance(method_expression, javalang.tree.BlockStatement):
+                    called_methods.update(construct_called_methods(class_name, graph_dict,
+                                                                    called_methods, flatten_attributes(statement_attributes)))
+
+    return called_methods
 
 
 for filename in glob.glob('StevenBreakout/*.java'):
