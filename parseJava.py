@@ -55,6 +55,12 @@ def get_methods_ids_that_match_name(name, graph_dict):
                 matched_method_ids.append(method.id)
     return matched_method_ids
 
+def create_method_id(class_name, name, parameter_types):
+    method_id = class_name + '.' + name
+    for parameter_type in parameter_types:
+        method_id.append('.' + parameter_type)
+    return method_id
+
 def create_defined_methods_and_fields_dict(java_classes):
     """Takes a list of classes and creates a graph_dict that includes the methods defined in each class."""
 
@@ -78,13 +84,14 @@ def create_defined_methods_and_fields_dict(java_classes):
             # TODO: Fill in modifier parameters
             # method_declaration attrs: ['documentation', 'modifiers', 'annotations', 'type_parameters', 'return_type', 'name', 'parameters', 'throws', 'body']
             # Method Initializer: def __init__(self, name, class_name, is_final, is_static, access_modifier, parameter_types):
-            method = Method(method_declaration.name, class_name, False, False, AccessModifier.PUBLIC, [])
+            method_id = create_method_id(class_name, method_declaration.name, [])
+            method = Method(method_id, method_declaration.name, class_name, False, False, AccessModifier.PUBLIC, [])
             class_dict["defined_methods"].append(method)
 
         # TODO: add properties now?
 
         graph_dict[java_class.name] = class_dict
-        return graph_dict
+    return graph_dict
 
 
 def construct_class_dict(declarations, class_name, graph_dict):
@@ -96,14 +103,12 @@ def construct_class_dict(declarations, class_name, graph_dict):
     method_declarations = declarations_dict["MethodDeclaration"]
 
     for method_declaration in method_declarations:
-        # constructing a Method object just to use it's id.
-        # TODO: make id a method of this class and then call it here instead of constructing a method
-        temp_method = Method(method_declaration.name, class_name, False, False, AccessModifier.PUBLIC, [])
+        method_id = create_method_id(class_name, method_declaration.name, [])
 
         print(f'++++> {method_declaration.name} is declared.')
 
         # Now figure out which methods this method calls and add to called_methods
-        class_dict["called_methods"][temp_method.id] = construct_called_methods(class_name, graph_dict, set(), method_declaration.body)
+        class_dict["called_methods"][method_id] = construct_called_methods(class_name, graph_dict, set(), method_declaration.body)
 
 
 recursive_statements = {javalang.tree.WhileStatement, javalang.tree.BlockStatement, javalang.tree.IfStatement, javalang.tree.BinaryOperation}
@@ -172,21 +177,26 @@ def construct_called_methods(class_name, graph_dict, called_methods, body):
 
     return called_methods
 
+DEFAULT_PARENT_DIRECTORY = "StevenBreakout"
 
-for filename in glob.glob('StevenBreakout/*.java'):
-    print(f'Processing {filename}')
+java_classes = []
+for filename in glob.glob(f'{DEFAULT_PARENT_DIRECTORY}/**/*.java', recursive = True):
+    print(f'Parsing {filename}')
 
     with open(filename) as java_file:
         java_code = java_file.read()
-        tree = javalang.parse.parse(java_code)  # A CompilationUnit (root of AST)
-        java_classes = tree.types # Our sample only has one class
+        try:
+            tree = javalang.parse.parse(java_code)  # A CompilationUnit (root of AST)
+            java_classes.extend(tree.types)
+        except:
+            continue
 
-        graph_dict = create_defined_methods_and_fields_dict(java_classes)
+graph_dict = create_defined_methods_and_fields_dict(java_classes)
 
-        for java_class in java_classes:  # Assumes class is not calling methods from other class
-            declarations_list = java_class.body  # The declarations in each class as a list
+for java_class in java_classes:
+    declarations_list = java_class.body  # The declarations in each class as a list
+    construct_class_dict(declarations_list, java_class.name, graph_dict)  # TODO: Rename method
 
-            construct_class_dict(declarations_list, java_class.name, graph_dict)  # TODO: Rename method
-
-            print(graph_dict)
-            visualize_call_graph(graph_dict[java_class.name]["called_methods"])
+print(f'Graph Dictionary {graph_dict}')
+for java_class in java_classes:
+    visualize_call_graph(graph_dict[java_class.name]["called_methods"])
