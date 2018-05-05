@@ -103,13 +103,13 @@ def construct_class_dict(declarations, class_name, graph_dict):
     for method_declaration in method_declarations:
         method_id = create_method_id(class_name, method_declaration.name)
 
-        print(f'++++> {method_declaration.name} is declared.')
+        print(f'++++++++++++++++++++++++++++++++++++++++++++++++++++> {method_declaration.name} is declared.')
 
         # Now figure out which methods this method calls and add to called_methods
         class_dict["called_methods"][method_id] = construct_called_methods(class_name, graph_dict, set(), method_declaration.body)
 
 
-recursive_statements = {javalang.tree.WhileStatement, javalang.tree.BlockStatement, javalang.tree.IfStatement, javalang.tree.BinaryOperation}
+recursive_statements = {javalang.tree.WhileStatement, javalang.tree.BlockStatement, javalang.tree.IfStatement, javalang.tree.BinaryOperation, javalang.tree.Creator}
 
 
 # Utility function to because certain Statements are blocks with a list of statements as their attributes
@@ -150,24 +150,25 @@ def construct_called_methods(class_name, graph_dict, called_methods, body):
             if isinstance(expression, javalang.tree.MethodInvocation):  # For each statement that invokes a method
                 called_methods.update(add_method(class_name, expression, graph_dict))
 
+            if isinstance(expression, javalang.tree.Assignment):
+                statement_attributes = [getattr(expression, attr) for attr in expression.attrs]
+                called_methods.update(construct_called_methods(class_name, graph_dict,
+                                                                called_methods, statement_attributes))
+
         except AttributeError:
             if isinstance(method_expression, javalang.tree.MethodInvocation):  # Sometimes expression is a MethodInvocation itself
                 called_methods.update(add_method(class_name, method_expression, graph_dict))
 
-            if type(method_expression) in recursive_statements:
+            if isinstance(method_expression, tuple(recursive_statements)):
                 print("Recursing into: {}".format(method_expression))
 
                 statement_attributes = [getattr(method_expression, attr) for attr in method_expression.attrs]
 
-                # Debugging
-                # if isinstance(method_expression, javalang.tree.IfStatement):
-                #     print(method_expression.condition)
-
-                if isinstance(method_expression, (javalang.tree.WhileStatement, javalang.tree.IfStatement)):
+                if isinstance(method_expression, (javalang.tree.WhileStatement, javalang.tree.IfStatement, javalang.tree.BinaryOperation)):
                     called_methods.update(construct_called_methods(class_name, graph_dict,
                                                                     called_methods, statement_attributes))
 
-                elif isinstance(method_expression, javalang.tree.BlockStatement):
+                elif isinstance(method_expression, (javalang.tree.BlockStatement, javalang.tree.Creator)):
                     called_methods.update(construct_called_methods(class_name, graph_dict,
                                                                     called_methods, flatten_attributes(statement_attributes)))
     return called_methods
