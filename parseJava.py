@@ -131,15 +131,19 @@ def construct_class_dict(declarations, class_name, graph_dict):
             except AttributeError:
                 continue
 
+DEFAULT_PARENT_DIRECTORY = "StevenBreakout"
 
 java_classes = []
-for filename in glob.glob('StevenBreakout/*.java'):
-    print(f'Processing {filename}')
+for filename in glob.glob(f'{DEFAULT_PARENT_DIRECTORY}/**/*.java', recursive = True):
+    print(f'Parsing {filename}')
 
     with open(filename) as java_file:
         java_code = java_file.read()
-        tree = javalang.parse.parse(java_code)  # A CompilationUnit (root of AST)
-        java_classes.extend(tree.types)
+        try:
+            tree = javalang.parse.parse(java_code)  # A CompilationUnit (root of AST)
+            java_classes.extend(tree.types)
+        except:
+            continue
 
 graph_dict = create_defined_methods_and_fields_dict(java_classes)
 
