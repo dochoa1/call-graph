@@ -90,7 +90,7 @@ def create_defined_methods_and_fields_dict(java_classes):
         # TODO: add properties now?
 
         graph_dict[java_class.name] = class_dict
-        return graph_dict
+    return graph_dict
 
 def construct_class_dict(declarations, class_name, graph_dict):
     """Parses method declarations in a class and adds called methods to the graph_dict.
@@ -132,20 +132,21 @@ def construct_class_dict(declarations, class_name, graph_dict):
                 continue
 
 
+java_classes = []
 for filename in glob.glob('StevenBreakout/*.java'):
     print(f'Processing {filename}')
 
     with open(filename) as java_file:
         java_code = java_file.read()
         tree = javalang.parse.parse(java_code)  # A CompilationUnit (root of AST)
-        java_classes = tree.types # Our sample only has one class
+        java_classes.extend(tree.types)
 
-        graph_dict = create_defined_methods_and_fields_dict(java_classes)
+graph_dict = create_defined_methods_and_fields_dict(java_classes)
 
-        for java_class in java_classes:  # Assumes class is not calling methods from other class
-            declarations_list = java_class.body  # The declarations in each class as a list
+for java_class in java_classes:
+    declarations_list = java_class.body  # The declarations in each class as a list
+    construct_class_dict(declarations_list, java_class.name, graph_dict)  # TODO: Rename method
 
-            construct_class_dict(declarations_list, java_class.name, graph_dict)  # TODO: Rename method
-
-            print(graph_dict)
-            visualize_call_graph(graph_dict[java_class.name]["called_methods"])
+print(f'Graph Dictionary {graph_dict}')
+for java_class in java_classes:
+    visualize_call_graph(graph_dict[java_class.name]["called_methods"])
