@@ -1,3 +1,6 @@
 [submodule "guava"]
 	path = guava
 	url = https://github.com/google/guava.git
+[submodule "gephi"]
+	path = gephi
+	url = https://github.com/gephi/gephi.git
