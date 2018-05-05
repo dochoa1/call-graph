@@ -1,0 +1,3 @@
+[submodule "guava"]
+	path = guava
+	url = https://github.com/google/guava.git
