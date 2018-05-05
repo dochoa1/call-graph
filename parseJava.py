@@ -11,6 +11,8 @@ mpl.use('TkAgg')  # Configuring matplotlib back-end
 import matplotlib.pyplot as plt
 import glob
 from collections import Iterable as Iterable
+from sys import argv
+
 
 def visualize_call_graph(call_graph):
     """Takes a call graph and visualizes using matplotlib."""
@@ -28,6 +30,7 @@ def visualize_call_graph(call_graph):
     nx.draw_networkx_labels(G, pos)
     plt.show()
 
+
 def construct_declarations_dictionary(declarations):
     """Helper method to convert a list of declarations into dictionary that
     groups by type of declaration."""
@@ -44,6 +47,7 @@ def construct_declarations_dictionary(declarations):
             declarations_dict["FieldDeclaration"].append(declaration)
     return declarations_dict
 
+
 def get_methods_ids_that_match_name(name, graph_dict):
     """Takes a method name and a graph_dict and returns a list of method_ids in the graph_dict
     that match the method name."""
@@ -55,11 +59,23 @@ def get_methods_ids_that_match_name(name, graph_dict):
                 matched_method_ids.append(method.id)
     return matched_method_ids
 
+
 def create_method_id(class_name, name, parameter_types):
     method_id = class_name + '.' + name
     for parameter_type in parameter_types:
         method_id.append('.' + parameter_type)
     return method_id
+
+
+def getopts(argv):
+    """Collect command-line options in a dictionary. From https://gist.github.com/dideler/2395703"""
+    opts = {}  # Empty dictionary to store key-value pairs.
+    while argv:  # While there are arguments left to parse...
+        if argv[0][0] == '-':  # Found a "-name value" pair.
+            opts[argv[0]] = argv[1]  # Add key and value to the dictionary.
+        argv = argv[1:]  # Reduce the argument list by copying it starting from index 1.
+    return opts
+
 
 def create_defined_methods_and_fields_dict(java_classes):
     """Takes a list of classes and creates a graph_dict that includes the methods defined in each class."""
@@ -144,9 +160,8 @@ def add_method(class_name, expression, graph_dict):
 
 
 def construct_called_methods(class_name, graph_dict, called_methods, body):
-    # TODO: Iterating over the method_declaration.body is insufficient here.
-    # For instance, the run method has one expression which is a while statement.
-    # We need to have some kind of recursive parsing here to read what is inside the loop.
+    if body == None:
+        return called_methods
 
     for method_expression in body:  # The statements/expressions that make up a method
         try:
@@ -174,13 +189,17 @@ def construct_called_methods(class_name, graph_dict, called_methods, body):
                 elif isinstance(method_expression, javalang.tree.BlockStatement):
                     called_methods.update(construct_called_methods(class_name, graph_dict,
                                                                     called_methods, flatten_attributes(statement_attributes)))
-
     return called_methods
 
-DEFAULT_PARENT_DIRECTORY = "StevenBreakout"
+
+parent_directory = "StevenBreakout"
+myargs = getopts(argv)
+if '-d' in myargs:  # Example usage.
+    parent_directory = myargs['-d']
+
 
 java_classes = []
-for filename in glob.glob(f'{DEFAULT_PARENT_DIRECTORY}/**/*.java', recursive = True):
+for filename in glob.glob(f'{parent_directory}/**/*.java', recursive = True):
     print(f'Parsing {filename}')
 
     with open(filename) as java_file:
