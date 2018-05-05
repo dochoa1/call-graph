@@ -13,8 +13,8 @@
       <node id="Node.incrementSemester" label="Node.incrementSemester" />
       <node id="StudentInfo.setYear" label="StudentInfo.setYear" />
       <node id="Course.equals" label="Course.equals" />
-      <node id="StudentInfo.setSemester" label="StudentInfo.setSemester" />
       <node id="CourseID.equals" label="CourseID.equals" />
+      <node id="StudentInfo.setSemester" label="StudentInfo.setSemester" />
       <node id="Node.getStuInfo" label="Node.getStuInfo" />
       <node id="Node.setStuInfo" label="Node.setStuInfo" />
       <node id="Node.getC1" label="Node.getC1" />
@@ -28,38 +28,38 @@
       <node id="Node.getChild" label="Node.getChild" />
       <node id="Node.setChild" label="Node.setChild" />
       <node id="Interface.main" label="Interface.main" />
-      <node id="Interface.setVisible" label="Interface.setVisible" />
       <node id="Interface.setSelected" label="Interface.setSelected" />
-      <node id="Interface.setLocation" label="Interface.setLocation" />
-      <node id="Interface.setResizable" label="Interface.setResizable" />
-      <node id="Interface.setMaximumSize" label="Interface.setMaximumSize" />
-      <node id="Interface.addActionListener" label="Interface.addActionListener" />
-      <node id="Interface.add" label="Interface.add" />
-      <node id="Interface.setDefaultCloseOperation" label="Interface.setDefaultCloseOperation" />
       <node id="Interface.setLayout" label="Interface.setLayout" />
+      <node id="Interface.addActionListener" label="Interface.addActionListener" />
+      <node id="Interface.setResizable" label="Interface.setResizable" />
+      <node id="Interface.setDefaultCloseOperation" label="Interface.setDefaultCloseOperation" />
+      <node id="Interface.setVisible" label="Interface.setVisible" />
+      <node id="Interface.setMaximumSize" label="Interface.setMaximumSize" />
       <node id="Interface.pack" label="Interface.pack" />
+      <node id="Interface.setLocation" label="Interface.setLocation" />
+      <node id="Interface.add" label="Interface.add" />
       <node id="FindPath.init" label="FindPath.init" />
       <node id="FindPath.createStudentCourses" label="FindPath.createStudentCourses" />
       <node id="FindPath.main" label="FindPath.main" />
       <node id="FindPath.findPath" label="FindPath.findPath" />
-      <node id="FindPath.containsKey" label="FindPath.containsKey" />
-      <node id="StudentInfo.setUsID" label="StudentInfo.setUsID" />
-      <node id="FindPath.exit" label="FindPath.exit" />
-      <node id="StudentInfo.setQuantitative" label="StudentInfo.setQuantitative" />
       <node id="FindPath.close" label="FindPath.close" />
+      <node id="FindPath.next" label="FindPath.next" />
+      <node id="FindPath.add" label="FindPath.add" />
       <node id="StudentInfo.setSocialSci" label="StudentInfo.setSocialSci" />
-      <node id="StudentInfo.setHumanFArts" label="StudentInfo.setHumanFArts" />
-      <node id="StudentInfo.setWriting" label="StudentInfo.setWriting" />
+      <node id="StudentInfo.setNaturalSci" label="StudentInfo.setNaturalSci" />
       <node id="FindPath.println" label="FindPath.println" />
       <node id="FindPath.print" label="FindPath.print" />
-      <node id="FindPath.add" label="FindPath.add" />
       <node id="StudentInfo.setLanguage" label="StudentInfo.setLanguage" />
-      <node id="StudentInfo.setInternationalism" label="StudentInfo.setInternationalism" />
       <node id="FindPath.put" label="FindPath.put" />
+      <node id="StudentInfo.setWriting" label="StudentInfo.setWriting" />
+      <node id="StudentInfo.setUsID" label="StudentInfo.setUsID" />
+      <node id="StudentInfo.setQuantitative" label="StudentInfo.setQuantitative" />
       <node id="StudentInfo.setMajors" label="StudentInfo.setMajors" />
-      <node id="StudentInfo.setNaturalSci" label="StudentInfo.setNaturalSci" />
-      <node id="FindPath.next" label="FindPath.next" />
+      <node id="FindPath.exit" label="FindPath.exit" />
       <node id="StudentInfo.setStudentCourses" label="StudentInfo.setStudentCourses" />
+      <node id="StudentInfo.setInternationalism" label="StudentInfo.setInternationalism" />
+      <node id="FindPath.containsKey" label="FindPath.containsKey" />
+      <node id="StudentInfo.setHumanFArts" label="StudentInfo.setHumanFArts" />
       <node id="FindPath.createCourses" label="FindPath.createCourses" />
       <node id="FindPath.readNext" label="FindPath.readNext" />
       <node id="FindPath.mergeMaps" label="FindPath.mergeMaps" />
@@ -135,8 +135,8 @@
       <node id="Course.toString" label="Course.toString" />
       <node id="Course.hashCode" label="Course.hashCode" />
       <node id="CourseTree.recurseSemesters" label="CourseTree.recurseSemesters" />
-      <node id="CourseTree.setStuInfo" label="CourseTree.setStuInfo" />
       <node id="CourseTree.println" label="CourseTree.println" />
+      <node id="CourseTree.setStuInfo" label="CourseTree.setStuInfo" />
       <node id="CourseTree.setFlags" label="CourseTree.setFlags" />
       <node id="CourseTree.generateChildren" label="CourseTree.generateChildren" />
       <node id="CourseTree.isValidChildCourse" label="CourseTree.isValidChildCourse" />
@@ -159,116 +159,116 @@
       <edge id="0" source="Node.updateStuCourses" target="Node.put" />
       <edge id="1" source="Node.incrementSemester" target="StudentInfo.setYear" />
       <edge id="2" source="Node.incrementSemester" target="Course.equals" />
-      <edge id="3" source="Node.incrementSemester" target="StudentInfo.setSemester" />
-      <edge id="4" source="Node.incrementSemester" target="CourseID.equals" />
-      <edge id="5" source="Course.equals" target="Course.equals" />
-      <edge id="6" source="Course.equals" target="CourseID.equals" />
+      <edge id="3" source="Node.incrementSemester" target="CourseID.equals" />
+      <edge id="4" source="Node.incrementSemester" target="StudentInfo.setSemester" />
+      <edge id="5" source="Course.equals" target="CourseID.equals" />
+      <edge id="6" source="Course.equals" target="Course.equals" />
       <edge id="7" source="CourseID.equals" target="Course.getDept" />
       <edge id="8" source="CourseID.equals" target="CourseID.getDept" />
-      <edge id="9" source="Interface.main" target="Interface.setVisible" />
-      <edge id="10" source="Interface.main" target="Interface.setSelected" />
-      <edge id="11" source="Interface.main" target="Interface.setLocation" />
+      <edge id="9" source="Interface.main" target="Interface.setSelected" />
+      <edge id="10" source="Interface.main" target="Interface.setLayout" />
+      <edge id="11" source="Interface.main" target="Interface.addActionListener" />
       <edge id="12" source="Interface.main" target="Interface.setResizable" />
-      <edge id="13" source="Interface.main" target="Interface.setMaximumSize" />
-      <edge id="14" source="Interface.main" target="Interface.addActionListener" />
-      <edge id="15" source="Interface.main" target="Interface.add" />
-      <edge id="16" source="Interface.main" target="Interface.setDefaultCloseOperation" />
-      <edge id="17" source="Interface.main" target="Interface.setLayout" />
-      <edge id="18" source="Interface.main" target="Interface.pack" />
+      <edge id="13" source="Interface.main" target="Interface.setDefaultCloseOperation" />
+      <edge id="14" source="Interface.main" target="Interface.setVisible" />
+      <edge id="15" source="Interface.main" target="Interface.setMaximumSize" />
+      <edge id="16" source="Interface.main" target="Interface.pack" />
+      <edge id="17" source="Interface.main" target="Interface.setLocation" />
+      <edge id="18" source="Interface.main" target="Interface.add" />
       <edge id="19" source="FindPath.init" target="FindPath.createStudentCourses" />
-      <edge id="20" source="FindPath.createStudentCourses" target="FindPath.containsKey" />
-      <edge id="21" source="FindPath.createStudentCourses" target="StudentInfo.setUsID" />
-      <edge id="22" source="FindPath.createStudentCourses" target="FindPath.exit" />
-      <edge id="23" source="FindPath.createStudentCourses" target="StudentInfo.setYear" />
-      <edge id="24" source="FindPath.createStudentCourses" target="Course.equals" />
-      <edge id="25" source="FindPath.createStudentCourses" target="StudentInfo.setQuantitative" />
-      <edge id="26" source="FindPath.createStudentCourses" target="FindPath.close" />
-      <edge id="27" source="FindPath.createStudentCourses" target="StudentInfo.setSocialSci" />
-      <edge id="28" source="FindPath.createStudentCourses" target="StudentInfo.setHumanFArts" />
-      <edge id="29" source="FindPath.createStudentCourses" target="StudentInfo.setWriting" />
-      <edge id="30" source="FindPath.createStudentCourses" target="FindPath.println" />
-      <edge id="31" source="FindPath.createStudentCourses" target="FindPath.print" />
-      <edge id="32" source="FindPath.createStudentCourses" target="FindPath.add" />
-      <edge id="33" source="FindPath.createStudentCourses" target="StudentInfo.setLanguage" />
-      <edge id="34" source="FindPath.createStudentCourses" target="StudentInfo.setInternationalism" />
-      <edge id="35" source="FindPath.createStudentCourses" target="FindPath.put" />
-      <edge id="36" source="FindPath.createStudentCourses" target="StudentInfo.setMajors" />
-      <edge id="37" source="FindPath.createStudentCourses" target="CourseID.equals" />
-      <edge id="38" source="FindPath.createStudentCourses" target="StudentInfo.setNaturalSci" />
-      <edge id="39" source="FindPath.createStudentCourses" target="FindPath.next" />
-      <edge id="40" source="FindPath.createStudentCourses" target="StudentInfo.setStudentCourses" />
+      <edge id="20" source="FindPath.createStudentCourses" target="StudentInfo.setYear" />
+      <edge id="21" source="FindPath.createStudentCourses" target="FindPath.close" />
+      <edge id="22" source="FindPath.createStudentCourses" target="FindPath.next" />
+      <edge id="23" source="FindPath.createStudentCourses" target="FindPath.add" />
+      <edge id="24" source="FindPath.createStudentCourses" target="StudentInfo.setSocialSci" />
+      <edge id="25" source="FindPath.createStudentCourses" target="Course.equals" />
+      <edge id="26" source="FindPath.createStudentCourses" target="StudentInfo.setNaturalSci" />
+      <edge id="27" source="FindPath.createStudentCourses" target="FindPath.println" />
+      <edge id="28" source="FindPath.createStudentCourses" target="CourseID.equals" />
+      <edge id="29" source="FindPath.createStudentCourses" target="FindPath.print" />
+      <edge id="30" source="FindPath.createStudentCourses" target="StudentInfo.setLanguage" />
+      <edge id="31" source="FindPath.createStudentCourses" target="FindPath.put" />
+      <edge id="32" source="FindPath.createStudentCourses" target="StudentInfo.setWriting" />
+      <edge id="33" source="FindPath.createStudentCourses" target="StudentInfo.setUsID" />
+      <edge id="34" source="FindPath.createStudentCourses" target="StudentInfo.setQuantitative" />
+      <edge id="35" source="FindPath.createStudentCourses" target="StudentInfo.setMajors" />
+      <edge id="36" source="FindPath.createStudentCourses" target="FindPath.exit" />
+      <edge id="37" source="FindPath.createStudentCourses" target="StudentInfo.setStudentCourses" />
+      <edge id="38" source="FindPath.createStudentCourses" target="StudentInfo.setInternationalism" />
+      <edge id="39" source="FindPath.createStudentCourses" target="FindPath.containsKey" />
+      <edge id="40" source="FindPath.createStudentCourses" target="StudentInfo.setHumanFArts" />
       <edge id="41" source="FindPath.main" target="FindPath.init" />
       <edge id="42" source="FindPath.main" target="FindPath.findPath" />
       <edge id="43" source="FindPath.createCourses" target="FindPath.put" />
       <edge id="44" source="FindPath.createCourses" target="FindPath.readNext" />
       <edge id="45" source="StudentInfo.mathMajorSatisfied" target="StudentInfo.checkSpecialMath" />
       <edge id="46" source="CourseID.hashCode" target="CourseID.hash" />
-      <edge id="47" source="CourseTree.recurseSemesters" target="Node.setChild" />
-      <edge id="48" source="CourseTree.recurseSemesters" target="FindPath.setStuInfo" />
-      <edge id="49" source="CourseTree.recurseSemesters" target="Node.setC1" />
-      <edge id="50" source="CourseTree.recurseSemesters" target="CourseTree.setStuInfo" />
-      <edge id="51" source="CourseTree.recurseSemesters" target="Node.incrementSemester" />
-      <edge id="52" source="CourseTree.recurseSemesters" target="CourseTree.recurseSemesters" />
-      <edge id="53" source="CourseTree.recurseSemesters" target="CourseTree.println" />
-      <edge id="54" source="CourseTree.recurseSemesters" target="Node.setC2" />
+      <edge id="47" source="CourseTree.recurseSemesters" target="Node.incrementSemester" />
+      <edge id="48" source="CourseTree.recurseSemesters" target="Node.setStuInfo" />
+      <edge id="49" source="CourseTree.recurseSemesters" target="Node.setC3" />
+      <edge id="50" source="CourseTree.recurseSemesters" target="Node.setParent" />
+      <edge id="51" source="CourseTree.recurseSemesters" target="CourseTree.println" />
+      <edge id="52" source="CourseTree.recurseSemesters" target="Node.setChild" />
+      <edge id="53" source="CourseTree.recurseSemesters" target="Node.setC1" />
+      <edge id="54" source="CourseTree.recurseSemesters" target="FindPath.setStuInfo" />
       <edge id="55" source="CourseTree.recurseSemesters" target="Node.updateStuCourses" />
-      <edge id="56" source="CourseTree.recurseSemesters" target="Node.setParent" />
+      <edge id="56" source="CourseTree.recurseSemesters" target="CourseTree.setStuInfo" />
       <edge id="57" source="CourseTree.recurseSemesters" target="CourseTree.setFlags" />
-      <edge id="58" source="CourseTree.recurseSemesters" target="Node.setC3" />
-      <edge id="59" source="CourseTree.recurseSemesters" target="Node.setStuInfo" />
-      <edge id="60" source="CourseTree.recurseSemesters" target="Node.setC4" />
-      <edge id="61" source="CourseTree.setFlags" target="Course.getDept" />
-      <edge id="62" source="CourseTree.setFlags" target="StudentInfo.setElectives" />
-      <edge id="63" source="CourseTree.setFlags" target="StudentInfo.setUsID" />
-      <edge id="64" source="CourseTree.setFlags" target="StudentInfo.setComp123" />
-      <edge id="65" source="CourseTree.setFlags" target="StudentInfo.setMath279" />
-      <edge id="66" source="CourseTree.setFlags" target="StudentInfo.setComp124" />
-      <edge id="67" source="CourseTree.setFlags" target="StudentInfo.setQuantitative" />
-      <edge id="68" source="CourseTree.setFlags" target="StudentInfo.setSocialSci" />
-      <edge id="69" source="CourseTree.setFlags" target="StudentInfo.setComp261" />
-      <edge id="70" source="CourseTree.setFlags" target="StudentInfo.setHumanFArts" />
-      <edge id="71" source="CourseTree.setFlags" target="StudentInfo.setMath237" />
-      <edge id="72" source="CourseTree.setFlags" target="StudentInfo.setComp240" />
+      <edge id="58" source="CourseTree.recurseSemesters" target="CourseTree.recurseSemesters" />
+      <edge id="59" source="CourseTree.recurseSemesters" target="Node.setC4" />
+      <edge id="60" source="CourseTree.recurseSemesters" target="Node.setC2" />
+      <edge id="61" source="CourseTree.setFlags" target="StudentInfo.setComp221" />
+      <edge id="62" source="CourseTree.setFlags" target="StudentInfo.setInternationalism" />
+      <edge id="63" source="CourseTree.setFlags" target="CourseID.getDept" />
+      <edge id="64" source="CourseTree.setFlags" target="StudentInfo.setSocialSci" />
+      <edge id="65" source="CourseTree.setFlags" target="StudentInfo.setComp123" />
+      <edge id="66" source="CourseTree.setFlags" target="Course.getCrossListed" />
+      <edge id="67" source="CourseTree.setFlags" target="StudentInfo.setMathCourse" />
+      <edge id="68" source="CourseTree.setFlags" target="CourseTree.setFlags" />
+      <edge id="69" source="CourseTree.setFlags" target="StudentInfo.setMath236" />
+      <edge id="70" source="CourseTree.setFlags" target="StudentInfo.setNaturalSci" />
+      <edge id="71" source="CourseTree.setFlags" target="StudentInfo.setMathCapstone" />
+      <edge id="72" source="CourseTree.setFlags" target="StudentInfo.setElectives" />
       <edge id="73" source="CourseTree.setFlags" target="StudentInfo.setMathElectives" />
-      <edge id="74" source="CourseTree.setFlags" target="StudentInfo.setLanguage" />
-      <edge id="75" source="CourseTree.setFlags" target="StudentInfo.setInternationalism" />
-      <edge id="76" source="CourseTree.setFlags" target="StudentInfo.setCSclass" />
-      <edge id="77" source="CourseTree.setFlags" target="StudentInfo.setMathCapstone" />
-      <edge id="78" source="CourseTree.setFlags" target="Course.getCourseName" />
-      <edge id="79" source="CourseTree.setFlags" target="StudentInfo.setComp221" />
-      <edge id="80" source="CourseTree.setFlags" target="StudentInfo.setMath155" />
-      <edge id="81" source="CourseTree.setFlags" target="StudentInfo.setMath236" />
-      <edge id="82" source="CourseTree.setFlags" target="CourseID.getDept" />
-      <edge id="83" source="CourseTree.setFlags" target="CourseTree.setFlags" />
-      <edge id="84" source="CourseTree.setFlags" target="StudentInfo.setComp225" />
-      <edge id="85" source="CourseTree.setFlags" target="Course.getCrossListed" />
-      <edge id="86" source="CourseTree.setFlags" target="StudentInfo.setNaturalSci" />
-      <edge id="87" source="CourseTree.setFlags" target="StudentInfo.setWriting" />
-      <edge id="88" source="CourseTree.setFlags" target="StudentInfo.setMathCourse" />
-      <edge id="89" source="CourseTree.setFlags" target="StudentInfo.setCapstone" />
+      <edge id="74" source="CourseTree.setFlags" target="StudentInfo.setCapstone" />
+      <edge id="75" source="CourseTree.setFlags" target="StudentInfo.setComp240" />
+      <edge id="76" source="CourseTree.setFlags" target="StudentInfo.setLanguage" />
+      <edge id="77" source="CourseTree.setFlags" target="StudentInfo.setWriting" />
+      <edge id="78" source="CourseTree.setFlags" target="Course.getDept" />
+      <edge id="79" source="CourseTree.setFlags" target="StudentInfo.setQuantitative" />
+      <edge id="80" source="CourseTree.setFlags" target="Course.getCourseName" />
+      <edge id="81" source="CourseTree.setFlags" target="StudentInfo.setUsID" />
+      <edge id="82" source="CourseTree.setFlags" target="StudentInfo.setMath237" />
+      <edge id="83" source="CourseTree.setFlags" target="StudentInfo.setComp261" />
+      <edge id="84" source="CourseTree.setFlags" target="StudentInfo.setMath155" />
+      <edge id="85" source="CourseTree.setFlags" target="StudentInfo.setComp124" />
+      <edge id="86" source="CourseTree.setFlags" target="StudentInfo.setMath279" />
+      <edge id="87" source="CourseTree.setFlags" target="StudentInfo.setComp225" />
+      <edge id="88" source="CourseTree.setFlags" target="StudentInfo.setHumanFArts" />
+      <edge id="89" source="CourseTree.setFlags" target="StudentInfo.setCSclass" />
       <edge id="90" source="CourseTree.isValidChildCourse" target="Course.getDept" />
-      <edge id="91" source="CourseTree.isValidChildCourse" target="CourseTree.containsKey" />
-      <edge id="92" source="CourseTree.isValidChildCourse" target="Course.getCourseName" />
-      <edge id="93" source="CourseTree.isValidChildCourse" target="CourseID.getDept" />
-      <edge id="94" source="CourseTree.preReqsSatisfied" target="Course.equals" />
-      <edge id="95" source="CourseTree.preReqsSatisfied" target="CourseID.equals" />
+      <edge id="91" source="CourseTree.isValidChildCourse" target="CourseID.getDept" />
+      <edge id="92" source="CourseTree.isValidChildCourse" target="CourseTree.containsKey" />
+      <edge id="93" source="CourseTree.isValidChildCourse" target="Course.getCourseName" />
+      <edge id="94" source="CourseTree.preReqsSatisfied" target="CourseID.equals" />
+      <edge id="95" source="CourseTree.preReqsSatisfied" target="Course.equals" />
       <edge id="96" source="CourseTree.courseNotTaken" target="CourseTree.getStuInfo" />
       <edge id="97" source="CourseTree.courseNotTaken" target="CourseTree.courseCrossListed" />
       <edge id="98" source="CourseTree.courseNotTaken" target="Node.getStuInfo" />
       <edge id="99" source="CourseTree.courseNotTaken" target="FindPath.getStuInfo" />
-      <edge id="100" source="CourseTree.courseCrossListed" target="Course.getCrossListed" />
+      <edge id="100" source="CourseTree.courseCrossListed" target="CourseTree.getStuInfo" />
       <edge id="101" source="CourseTree.courseCrossListed" target="Node.getStuInfo" />
-      <edge id="102" source="CourseTree.courseCrossListed" target="CourseTree.getStuInfo" />
-      <edge id="103" source="CourseTree.courseCrossListed" target="FindPath.getStuInfo" />
-      <edge id="104" source="CourseTree.courseOffered" target="Course.equals" />
-      <edge id="105" source="CourseTree.courseOffered" target="CourseID.equals" />
-      <edge id="106" source="CourseTree.generateScore" target="Course.getDept" />
-      <edge id="107" source="CourseTree.generateScore" target="Node.getStuInfo" />
-      <edge id="108" source="CourseTree.generateScore" target="Course.equals" />
-      <edge id="109" source="CourseTree.generateScore" target="CourseID.getDept" />
-      <edge id="110" source="CourseTree.generateScore" target="FindPath.getStuInfo" />
+      <edge id="102" source="CourseTree.courseCrossListed" target="FindPath.getStuInfo" />
+      <edge id="103" source="CourseTree.courseCrossListed" target="Course.getCrossListed" />
+      <edge id="104" source="CourseTree.courseOffered" target="CourseID.equals" />
+      <edge id="105" source="CourseTree.courseOffered" target="Course.equals" />
+      <edge id="106" source="CourseTree.generateScore" target="CourseTree.getStuInfo" />
+      <edge id="107" source="CourseTree.generateScore" target="Course.getDept" />
+      <edge id="108" source="CourseTree.generateScore" target="CourseID.getDept" />
+      <edge id="109" source="CourseTree.generateScore" target="Node.getStuInfo" />
+      <edge id="110" source="CourseTree.generateScore" target="Course.equals" />
       <edge id="111" source="CourseTree.generateScore" target="CourseID.equals" />
-      <edge id="112" source="CourseTree.generateScore" target="CourseTree.getStuInfo" />
+      <edge id="112" source="CourseTree.generateScore" target="FindPath.getStuInfo" />
       <edge id="113" source="CourseTree.sortMap" target="CourseTree.sort" />
     </edges>
   </graph>

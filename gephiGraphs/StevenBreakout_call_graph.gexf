@@ -41,30 +41,30 @@
       <node id="Brick.equals" label="Brick.equals" />
       <node id="BreakoutProgram.init" label="BreakoutProgram.init" />
       <node id="BreakoutProgram.addKeyListeners" label="BreakoutProgram.addKeyListeners" />
-      <node id="BreakoutProgram.setSize" label="BreakoutProgram.setSize" />
-      <node id="BreakoutProgram.setLocation" label="BreakoutProgram.setLocation" />
       <node id="BreakoutProgram.setBackground" label="BreakoutProgram.setBackground" />
+      <node id="BreakoutProgram.setSize" label="BreakoutProgram.setSize" />
       <node id="BreakoutProgram.add" label="BreakoutProgram.add" />
+      <node id="BreakoutProgram.setLocation" label="BreakoutProgram.setLocation" />
       <node id="BreakoutProgram.run" label="BreakoutProgram.run" />
-      <node id="BreakoutProgram.remove" label="BreakoutProgram.remove" />
-      <node id="BreakoutProgram.exit" label="BreakoutProgram.exit" />
       <node id="BreakoutProgram.checkBottomWall" label="BreakoutProgram.checkBottomWall" />
-      <node id="BreakoutProgram.pause" label="BreakoutProgram.pause" />
       <node id="BreakoutProgram.setLabel" label="BreakoutProgram.setLabel" />
+      <node id="BreakoutProgram.exit" label="BreakoutProgram.exit" />
+      <node id="BreakoutProgram.setFont" label="BreakoutProgram.setFont" />
+      <node id="BreakoutProgram.pause" label="BreakoutProgram.pause" />
+      <node id="BreakoutProgram.setColor" label="BreakoutProgram.setColor" />
+      <node id="BreakoutProgram.remove" label="BreakoutProgram.remove" />
       <node id="BreakoutProgram.checkLeftWall" label="BreakoutProgram.checkLeftWall" />
       <node id="BreakoutProgram.checkTopWall" label="BreakoutProgram.checkTopWall" />
-      <node id="BreakoutProgram.checkBrickWall" label="BreakoutProgram.checkBrickWall" />
       <node id="BreakoutProgram.checkPaddle" label="BreakoutProgram.checkPaddle" />
-      <node id="BreakoutProgram.setFont" label="BreakoutProgram.setFont" />
       <node id="BreakoutProgram.checkRightWall" label="BreakoutProgram.checkRightWall" />
-      <node id="BreakoutProgram.setColor" label="BreakoutProgram.setColor" />
+      <node id="BreakoutProgram.checkBrickWall" label="BreakoutProgram.checkBrickWall" />
       <node id="BreakoutProgram.keyPressed" label="BreakoutProgram.keyPressed" />
       <node id="BreakoutProgram.getKeyCode" label="BreakoutProgram.getKeyCode" />
       <node id="BreakoutProgram.containsBall" label="BreakoutProgram.containsBall" />
       <node id="BreakoutProgram.switchDirect" label="BreakoutProgram.switchDirect" />
       <node id="BreakoutProgram.checkPaddleBall" label="BreakoutProgram.checkPaddleBall" />
-      <node id="BreakoutProgram.switchDirectOneCorner" label="BreakoutProgram.switchDirectOneCorner" />
       <node id="BreakoutProgram.switchDirectTwoCorners" label="BreakoutProgram.switchDirectTwoCorners" />
+      <node id="BreakoutProgram.switchDirectOneCorner" label="BreakoutProgram.switchDirectOneCorner" />
     </nodes>
     <edges>
       <edge id="0" source="Bar.moveRight" target="Ball.move" />
@@ -75,62 +75,62 @@
       <edge id="5" source="Ball.setDxNegative" target="Ball.setDx" />
       <edge id="6" source="Ball.setDyPositive" target="Ball.setDy" />
       <edge id="7" source="Ball.setDyNegative" target="Ball.setDy" />
-      <edge id="8" source="Ball.startBall" target="Ball.setDx" />
-      <edge id="9" source="Ball.startBall" target="Ball.setDy" />
+      <edge id="8" source="Ball.startBall" target="Ball.setDy" />
+      <edge id="9" source="Ball.startBall" target="Ball.setDx" />
       <edge id="10" source="Ball.startBall" target="Ball.nextBoolean" />
       <edge id="11" source="BreakoutProgram.init" target="BreakoutProgram.addKeyListeners" />
-      <edge id="12" source="BreakoutProgram.init" target="BreakoutProgram.setSize" />
-      <edge id="13" source="BreakoutProgram.init" target="BreakoutProgram.setLocation" />
-      <edge id="14" source="BreakoutProgram.init" target="BreakoutProgram.setBackground" />
-      <edge id="15" source="BreakoutProgram.init" target="BreakoutProgram.add" />
+      <edge id="12" source="BreakoutProgram.init" target="BreakoutProgram.setBackground" />
+      <edge id="13" source="BreakoutProgram.init" target="BreakoutProgram.setSize" />
+      <edge id="14" source="BreakoutProgram.init" target="BreakoutProgram.add" />
+      <edge id="15" source="BreakoutProgram.init" target="BreakoutProgram.setLocation" />
       <edge id="16" source="BreakoutProgram.run" target="Ball.move" />
-      <edge id="17" source="BreakoutProgram.run" target="BreakoutProgram.remove" />
-      <edge id="18" source="BreakoutProgram.run" target="BreakoutProgram.exit" />
-      <edge id="19" source="BreakoutProgram.run" target="Ball.startBall" />
-      <edge id="20" source="BreakoutProgram.run" target="BreakoutProgram.checkBottomWall" />
+      <edge id="17" source="BreakoutProgram.run" target="BreakoutProgram.checkBottomWall" />
+      <edge id="18" source="BreakoutProgram.run" target="BreakoutProgram.setLabel" />
+      <edge id="19" source="BreakoutProgram.run" target="BreakoutProgram.exit" />
+      <edge id="20" source="BreakoutProgram.run" target="BreakoutProgram.setFont" />
       <edge id="21" source="BreakoutProgram.run" target="BreakoutProgram.pause" />
-      <edge id="22" source="BreakoutProgram.run" target="BreakoutProgram.setLabel" />
-      <edge id="23" source="BreakoutProgram.run" target="BreakoutProgram.checkLeftWall" />
-      <edge id="24" source="BreakoutProgram.run" target="BreakoutProgram.checkTopWall" />
-      <edge id="25" source="BreakoutProgram.run" target="BreakoutProgram.checkBrickWall" />
-      <edge id="26" source="BreakoutProgram.run" target="BreakoutProgram.checkPaddle" />
-      <edge id="27" source="BreakoutProgram.run" target="BreakoutProgram.setLocation" />
-      <edge id="28" source="BreakoutProgram.run" target="BreakoutProgram.add" />
-      <edge id="29" source="BreakoutProgram.run" target="BreakoutProgram.setFont" />
-      <edge id="30" source="BreakoutProgram.run" target="BreakoutProgram.checkRightWall" />
-      <edge id="31" source="BreakoutProgram.run" target="BreakoutProgram.setColor" />
+      <edge id="22" source="BreakoutProgram.run" target="BreakoutProgram.setColor" />
+      <edge id="23" source="BreakoutProgram.run" target="BreakoutProgram.setLocation" />
+      <edge id="24" source="BreakoutProgram.run" target="BreakoutProgram.remove" />
+      <edge id="25" source="BreakoutProgram.run" target="BreakoutProgram.checkLeftWall" />
+      <edge id="26" source="BreakoutProgram.run" target="BreakoutProgram.checkTopWall" />
+      <edge id="27" source="BreakoutProgram.run" target="BreakoutProgram.checkPaddle" />
+      <edge id="28" source="BreakoutProgram.run" target="Ball.startBall" />
+      <edge id="29" source="BreakoutProgram.run" target="BreakoutProgram.checkRightWall" />
+      <edge id="30" source="BreakoutProgram.run" target="BreakoutProgram.checkBrickWall" />
+      <edge id="31" source="BreakoutProgram.run" target="BreakoutProgram.add" />
       <edge id="32" source="BreakoutProgram.checkLeftWall" target="Brick.setX" />
-      <edge id="33" source="BreakoutProgram.checkLeftWall" target="Ball.setDxPositive" />
-      <edge id="34" source="BreakoutProgram.checkLeftWall" target="Bar.setX" />
-      <edge id="35" source="BreakoutProgram.checkLeftWall" target="Ball.setX" />
-      <edge id="36" source="BreakoutProgram.checkTopWall" target="Ball.setY" />
-      <edge id="37" source="BreakoutProgram.checkTopWall" target="Ball.setDyPositive" />
+      <edge id="33" source="BreakoutProgram.checkLeftWall" target="Ball.setX" />
+      <edge id="34" source="BreakoutProgram.checkLeftWall" target="Ball.setDxPositive" />
+      <edge id="35" source="BreakoutProgram.checkLeftWall" target="Bar.setX" />
+      <edge id="36" source="BreakoutProgram.checkTopWall" target="Brick.setY" />
+      <edge id="37" source="BreakoutProgram.checkTopWall" target="Ball.setY" />
       <edge id="38" source="BreakoutProgram.checkTopWall" target="Bar.setY" />
-      <edge id="39" source="BreakoutProgram.checkTopWall" target="Brick.setY" />
-      <edge id="40" source="BreakoutProgram.checkBrickWall" target="BreakoutProgram.containsBall" />
-      <edge id="41" source="BreakoutProgram.checkBrickWall" target="BreakoutProgram.switchDirect" />
-      <edge id="42" source="BreakoutProgram.checkBrickWall" target="BrickWall.removeBrick" />
-      <edge id="43" source="BreakoutProgram.checkPaddle" target="BreakoutProgram.containsBall" />
-      <edge id="44" source="BreakoutProgram.checkPaddle" target="BreakoutProgram.switchDirect" />
-      <edge id="45" source="BreakoutProgram.checkRightWall" target="Brick.setX" />
-      <edge id="46" source="BreakoutProgram.checkRightWall" target="Ball.setDxNegative" />
-      <edge id="47" source="BreakoutProgram.checkRightWall" target="Bar.setX" />
-      <edge id="48" source="BreakoutProgram.checkRightWall" target="Ball.setX" />
+      <edge id="39" source="BreakoutProgram.checkTopWall" target="Ball.setDyPositive" />
+      <edge id="40" source="BreakoutProgram.checkPaddle" target="BreakoutProgram.containsBall" />
+      <edge id="41" source="BreakoutProgram.checkPaddle" target="BreakoutProgram.switchDirect" />
+      <edge id="42" source="BreakoutProgram.checkRightWall" target="Brick.setX" />
+      <edge id="43" source="BreakoutProgram.checkRightWall" target="Ball.setX" />
+      <edge id="44" source="BreakoutProgram.checkRightWall" target="Ball.setDxNegative" />
+      <edge id="45" source="BreakoutProgram.checkRightWall" target="Bar.setX" />
+      <edge id="46" source="BreakoutProgram.checkBrickWall" target="BreakoutProgram.containsBall" />
+      <edge id="47" source="BreakoutProgram.checkBrickWall" target="BrickWall.removeBrick" />
+      <edge id="48" source="BreakoutProgram.checkBrickWall" target="BreakoutProgram.switchDirect" />
       <edge id="49" source="BreakoutProgram.keyPressed" target="BreakoutProgram.getKeyCode" />
-      <edge id="50" source="BreakoutProgram.switchDirect" target="Ball.switchDy" />
-      <edge id="51" source="BreakoutProgram.switchDirect" target="Ball.switchDx" />
-      <edge id="52" source="BreakoutProgram.switchDirect" target="BreakoutProgram.switchDirectOneCorner" />
-      <edge id="53" source="BreakoutProgram.switchDirect" target="BreakoutProgram.switchDirectTwoCorners" />
-      <edge id="54" source="BreakoutProgram.switchDirectOneCorner" target="Ball.setDxPositive" />
-      <edge id="55" source="BreakoutProgram.switchDirectOneCorner" target="Ball.setDyNegative" />
-      <edge id="56" source="BreakoutProgram.switchDirectOneCorner" target="Ball.setDyPositive" />
-      <edge id="57" source="BreakoutProgram.switchDirectOneCorner" target="Ball.setDxNegative" />
-      <edge id="58" source="BreakoutProgram.switchDirectTwoCorners" target="Ball.switchDx" />
+      <edge id="50" source="BreakoutProgram.switchDirect" target="BreakoutProgram.switchDirectTwoCorners" />
+      <edge id="51" source="BreakoutProgram.switchDirect" target="Ball.switchDy" />
+      <edge id="52" source="BreakoutProgram.switchDirect" target="Ball.switchDx" />
+      <edge id="53" source="BreakoutProgram.switchDirect" target="BreakoutProgram.switchDirectOneCorner" />
+      <edge id="54" source="BreakoutProgram.switchDirectTwoCorners" target="Ball.setDyPositive" />
+      <edge id="55" source="BreakoutProgram.switchDirectTwoCorners" target="Ball.setDxPositive" />
+      <edge id="56" source="BreakoutProgram.switchDirectTwoCorners" target="Ball.setDxNegative" />
+      <edge id="57" source="BreakoutProgram.switchDirectTwoCorners" target="Ball.switchDx" />
+      <edge id="58" source="BreakoutProgram.switchDirectTwoCorners" target="Ball.setDyNegative" />
       <edge id="59" source="BreakoutProgram.switchDirectTwoCorners" target="Ball.switchDy" />
-      <edge id="60" source="BreakoutProgram.switchDirectTwoCorners" target="Ball.setDxPositive" />
-      <edge id="61" source="BreakoutProgram.switchDirectTwoCorners" target="Ball.setDyNegative" />
-      <edge id="62" source="BreakoutProgram.switchDirectTwoCorners" target="Ball.setDyPositive" />
-      <edge id="63" source="BreakoutProgram.switchDirectTwoCorners" target="Ball.setDxNegative" />
+      <edge id="60" source="BreakoutProgram.switchDirectOneCorner" target="Ball.setDyPositive" />
+      <edge id="61" source="BreakoutProgram.switchDirectOneCorner" target="Ball.setDxPositive" />
+      <edge id="62" source="BreakoutProgram.switchDirectOneCorner" target="Ball.setDxNegative" />
+      <edge id="63" source="BreakoutProgram.switchDirectOneCorner" target="Ball.setDyNegative" />
     </edges>
   </graph>
 </gexf>
