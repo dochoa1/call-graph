@@ -13,14 +13,16 @@ from collections import Iterable as Iterable
 from sys import argv
 
 
-def visualize_call_graph(call_graph):
-    """Takes a call graph and visualizes using matplotlib."""
+def visualize_call_graph(graph_dict):
+    """Takes a graph dictionary and visualizes using matplotlib."""
     G = nx.DiGraph()  # Directed graph
 
-    for callee_method_name, called_methods in call_graph.items():
-        G.add_node(callee_method_name)
-        for called_method_name in called_methods:
-            G.add_edge(callee_method_name, called_method_name)
+    for java_class, class_dict in graph_dict.items():
+        call_graph = class_dict["called_methods"]
+        for callee_method_name, called_methods in call_graph.items():
+            G.add_node(callee_method_name)
+            for called_method_name in called_methods:
+                G.add_edge(callee_method_name, called_method_name)
 
     pos = nx.spring_layout(G)
     nx.draw(G, pos, font_size=16, with_labels=False) # place labels seperately above node
@@ -196,5 +198,4 @@ for java_class in java_classes:
     construct_class_dict(declarations_list, java_class.name, graph_dict)  # TODO: Rename method
 
 print(f'Graph Dictionary {graph_dict}')
-for java_class in java_classes:
-    visualize_call_graph(graph_dict[java_class.name]["called_methods"])
+visualize_call_graph(graph_dict)
