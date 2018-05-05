@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import glob
 
 def visualize_call_graph(call_graph):
+    """Takes a call graph and visualizes using matplotlib."""
     G = nx.DiGraph()  # Directed graph
 
     for callee_method_name, called_methods in call_graph.items():
@@ -27,6 +28,9 @@ def visualize_call_graph(call_graph):
     plt.show()
 
 def construct_declarations_dictionary(declarations):
+    """Helper method to convert a list of declarations into dictionary that
+    groups by type of declaration."""
+
     declarations_dict = {
                         "MethodDeclaration": [],
                         "FieldDeclaration": []
@@ -39,58 +43,88 @@ def construct_declarations_dictionary(declarations):
             declarations_dict["FieldDeclaration"].append(declaration)
     return declarations_dict
 
-def construct_class_dict(declarations, class_name):
+def get_methods_ids_that_match_name(name, graph_dict):
+    """Takes a method name and a graph_dict and returns a list of method_ids in the graph_dict
+    that match the method name."""
+    # TODO: This isn't very efficient
+    matched_method_ids = []
+    for class_name, class_dict in graph_dict.items():
+        for method in class_dict["defined_methods"]:
+            if name == method.name:
+                matched_method_ids.append(method.id)
+    return matched_method_ids
 
-    class_dict = {
-                    "defined_methods": [],
-                    "called_methods": {},
-                    "properties": []
-                 }
+def create_defined_methods_and_fields_dict(java_classes):
+    """Takes a list of classes and creates a graph_dict that includes the methods defined in each class."""
+
+    graph_dict = {}
+    for java_class in java_classes:  # Assumes class is not calling methods from other class
+        class_name = java_class.name
+
+        class_dict = {
+                        "defined_methods": [],
+                        "called_methods" : {}
+                        # "properties": []
+                     }
+
+        declarations_list = java_class.body  # The declarations in each class as a list
+        declarations_dict = construct_declarations_dictionary(declarations_list)  # Intermediate data structure meant for parsing methods of a class
+        method_declarations = declarations_dict["MethodDeclaration"]
+
+        for method_declaration in method_declarations:
+
+            # First add method to defined methods
+            # TODO: Fill in modifier parameters
+            # method_declaration attrs: ['documentation', 'modifiers', 'annotations', 'type_parameters', 'return_type', 'name', 'parameters', 'throws', 'body']
+            # Method Initializer: def __init__(self, name, class_name, is_final, is_static, access_modifier, parameter_types):
+            method = Method(method_declaration.name, class_name, False, False, AccessModifier.PUBLIC, [])
+            class_dict["defined_methods"].append(method)
+
+        # TODO: add properties now?
+
+        graph_dict[java_class.name] = class_dict
+        return graph_dict
+
+def construct_class_dict(declarations, class_name, graph_dict):
+    """Parses method declarations in a class and adds called methods to the graph_dict.
+    SIDE EFFECT: modifies graph_dict."""
+    class_dict = graph_dict[class_name]
 
     declarations_dict = construct_declarations_dictionary(declarations)  # Intermediate data structure meant for parsing methods of a class
     method_declarations = declarations_dict["MethodDeclaration"]
 
     for method_declaration in method_declarations:
+        # constructing a Method object just to use it's id.
+        # TODO: make id a method of this class and then call it here instead of constructing a method
+        temp_method = Method(method_declaration.name, class_name, False, False, AccessModifier.PUBLIC, [])
 
-        # First add method to defined methods
-        # TODO: Fill in modifier parameters
-        # method_declaration attrs: ['documentation', 'modifiers', 'annotations', 'type_parameters', 'return_type', 'name', 'parameters', 'throws', 'body']
-        # Method Initializer: def __init__(self, name, class_name, is_final, is_static, access_modifier, parameter_types):
-        method = Method(method_declaration.name, class_name, False, False, AccessModifier.PUBLIC, [])
-        class_dict["defined_methods"].append(method)
+        print(f'++++> {method_declaration.name} is declared.')
 
         # Now figure out which methods this method calls and add to called_methods
-        class_dict["called_methods"][method.id] = set()
-        for method_expressions in method_declaration.body:  # The statements/expressions that make up a method
+        class_dict["called_methods"][temp_method.id] = set()
+
+        # TODO: Iterating over the method_declaration.body is insufficient here.
+        # For instance, the run method has one expression which is a while statement.
+        # We need to have some kind of recursive parsing here to read what is inside the loop.
+        for method_expression in method_declaration.body:  # The statements/expressions that make up a method
 
             try:
-                expression = method_expressions.expression
-
+                expression = method_expression.expression
                 if isinstance(expression, javalang.tree.MethodInvocation):  # For each statement that invokes a method
-                    # if expression.member in method_declaration_names:  # compare to names because member =/= javaMethodDeclaration
 
-                    # Debugging Help
-                    # print(expression.member)
-                    # print(expression.attrs)
-                    # print(expression.qualifier)
-                    # print(expression.selectors)
-                    # print(expression.type_arguments)
-                    # print(expression.arguments)
-                    # TODO: We need to figure out how to add the method id here but we can't
-                    # build it from the attributes of an expression
-                    # We could instead use the method name but a method name isn't unique because different
-                    # classes can have the same method name and methods can be overloaded with different arguments.
-                    # The qualifier attribute is a string that tells us the variable name of the object we are calling the method on.
-                    # We need to figure out the class of that object.
-                    # Also, the type_arguments provided by javalang here are super generic.
-                    # i.e. Cast, MemberReference, Literal, NumberReference.
-                    # I'm not sure how to solve this.
-                    # We probably need to do a pass where we build a data structure with all of the defined methods
-                    # in our program and then after that, work on the call graph.
-                    class_dict["called_methods"][method.id].add(expression.member)
+                    # Okay,the goal for now is to just construct a sound call graph (not a precise one), so let's just add an
+                    # edge to all of the possible options. We can add CHA later to restrict how many edges are added
+                    matched_method_ids = get_methods_ids_that_match_name(expression.member, graph_dict)
+
+                    if len(matched_method_ids) == 0:  # Method may have been defined in super class. We are constructing a partial graph
+                        # FIXME: If we add parameters to ID, we'll have a problem here
+                        class_dict["called_methods"][temp_method.id].add(class_name + '.' + expression.member)
+
+                    for matched_method_id in matched_method_ids:
+                        print("-----> Adding ", matched_method_id)
+                        class_dict["called_methods"][temp_method.id].add(matched_method_id)
             except AttributeError:
-                pass
-    return class_dict
+                continue
 
 
 for filename in glob.glob('StevenBreakout/*.java'):
@@ -101,13 +135,12 @@ for filename in glob.glob('StevenBreakout/*.java'):
         tree = javalang.parse.parse(java_code)  # A CompilationUnit (root of AST)
         java_classes = tree.types # Our sample only has one class
 
-        graph_dict = {}
+        graph_dict = create_defined_methods_and_fields_dict(java_classes)
 
         for java_class in java_classes:  # Assumes class is not calling methods from other class
             declarations_list = java_class.body  # The declarations in each class as a list
 
-            class_dict = construct_class_dict(declarations_list, java_class.name)
-            graph_dict[java_class.name] = class_dict
+            construct_class_dict(declarations_list, java_class.name, graph_dict)  # TODO: Rename method
 
             print(graph_dict)
-            visualize_call_graph(class_dict["called_methods"])
+            visualize_call_graph(graph_dict[java_class.name]["called_methods"])
