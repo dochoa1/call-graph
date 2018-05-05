@@ -6,7 +6,6 @@ import javalang
 import networkx as nx
 import matplotlib as mpl
 from Method import Method
-from AccessModifier import AccessModifier
 mpl.use('TkAgg')  # Configuring matplotlib back-end
 import matplotlib.pyplot as plt
 import glob
@@ -31,21 +30,15 @@ def visualize_call_graph(call_graph):
     plt.show()
 
 
-def construct_declarations_dictionary(declarations):
+def construct_method_declarations_list(declarations):
     """Helper method to convert a list of declarations into dictionary that
     groups by type of declaration."""
 
-    declarations_dict = {
-                        "MethodDeclaration": [],
-                        "FieldDeclaration": []
-                        }
-
+    method_declarations = []
     for declaration in declarations:
         if isinstance(declaration, javalang.tree.MethodDeclaration):
-            declarations_dict["MethodDeclaration"].append(declaration)
-        elif isinstance(declaration, javalang.tree.FieldDeclaration):
-            declarations_dict["FieldDeclaration"].append(declaration)
-    return declarations_dict
+            method_declarations.append(declaration)
+    return method_declarations
 
 
 def get_methods_ids_that_match_name(name, graph_dict):
@@ -60,11 +53,8 @@ def get_methods_ids_that_match_name(name, graph_dict):
     return matched_method_ids
 
 
-def create_method_id(class_name, name, parameter_types):
-    method_id = class_name + '.' + name
-    for parameter_type in parameter_types:
-        method_id.append('.' + parameter_type)
-    return method_id
+def create_method_id(class_name, name):
+    return class_name + '.' + name
 
 
 def getopts(argv):
@@ -87,24 +77,16 @@ def create_defined_methods_and_fields_dict(java_classes):
         class_dict = {
                         "defined_methods": [],
                         "called_methods" : {}
-                        # "properties": []
                      }
 
         declarations_list = java_class.body  # The declarations in each class as a list
-        declarations_dict = construct_declarations_dictionary(declarations_list)  # Intermediate data structure meant for parsing methods of a class
-        method_declarations = declarations_dict["MethodDeclaration"]
 
+        method_declarations = construct_method_declarations_list(declarations_list)  # Intermediate data structure meant for parsing methods of a class
         for method_declaration in method_declarations:
 
-            # First add method to defined methods
-            # TODO: Fill in modifier parameters
-            # method_declaration attrs: ['documentation', 'modifiers', 'annotations', 'type_parameters', 'return_type', 'name', 'parameters', 'throws', 'body']
-            # Method Initializer: def __init__(self, name, class_name, is_final, is_static, access_modifier, parameter_types):
-            method_id = create_method_id(class_name, method_declaration.name, [])
-            method = Method(method_id, method_declaration.name, class_name, False, False, AccessModifier.PUBLIC, [])
+            method_id = create_method_id(class_name, method_declaration.name)
+            method = Method(method_id, method_declaration.name, class_name)
             class_dict["defined_methods"].append(method)
-
-        # TODO: add properties now?
 
         graph_dict[java_class.name] = class_dict
     return graph_dict
@@ -115,11 +97,9 @@ def construct_class_dict(declarations, class_name, graph_dict):
     SIDE EFFECT: modifies graph_dict."""
     class_dict = graph_dict[class_name]
 
-    declarations_dict = construct_declarations_dictionary(declarations)  # Intermediate data structure meant for parsing methods of a class
-    method_declarations = declarations_dict["MethodDeclaration"]
-
+    method_declarations = construct_method_declarations_list(declarations)  # Intermediate data structure meant for parsing methods of a class
     for method_declaration in method_declarations:
-        method_id = create_method_id(class_name, method_declaration.name, [])
+        method_id = create_method_id(class_name, method_declaration.name)
 
         print(f'++++> {method_declaration.name} is declared.')
 
@@ -155,7 +135,6 @@ def add_method(class_name, expression, graph_dict):
     for matched_method_id in matched_method_ids:
         print("-----> Adding ", matched_method_id)
         methods.add(matched_method_id)
-
     return methods
 
 
