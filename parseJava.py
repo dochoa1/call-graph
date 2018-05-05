@@ -13,8 +13,18 @@ from collections import Iterable as Iterable
 from sys import argv
 
 
-def visualize_call_graph(graph_dict):
-    """Takes a graph dictionary and visualizes using matplotlib."""
+def visualize_call_graph(G):
+    """Takes a networkx graph and visualizes using matplotlib."""
+
+    pos = nx.spring_layout(G)
+    nx.draw(G, pos, font_size=16, with_labels=False) # place labels seperately above node
+    for p in pos:  # Raise text positions
+        pos[p][1] += 0.1
+    nx.draw_networkx_labels(G, pos)
+    plt.show()
+
+
+def create_networkx_graph(graph_dict):
     G = nx.DiGraph()  # Directed graph
 
     for java_class, class_dict in graph_dict.items():
@@ -23,13 +33,7 @@ def visualize_call_graph(graph_dict):
             G.add_node(callee_method_name)
             for called_method_name in called_methods:
                 G.add_edge(callee_method_name, called_method_name)
-
-    pos = nx.spring_layout(G)
-    nx.draw(G, pos, font_size=16, with_labels=False) # place labels seperately above node
-    for p in pos:  # Raise text positions
-        pos[p][1] += 0.1
-    nx.draw_networkx_labels(G, pos)
-    plt.show()
+    return G
 
 
 def construct_method_declarations_list(declarations):
@@ -175,7 +179,7 @@ def construct_called_methods(class_name, graph_dict, called_methods, body):
 
 parent_directory = "StevenBreakout"
 myargs = getopts(argv)
-if '-d' in myargs:  # Example usage.
+if '-d' in myargs:
     parent_directory = myargs['-d']
 
 
@@ -198,4 +202,6 @@ for java_class in java_classes:
     construct_class_dict(declarations_list, java_class.name, graph_dict)  # TODO: Rename method
 
 print(f'Graph Dictionary {graph_dict}')
-visualize_call_graph(graph_dict)
+G = create_networkx_graph(graph_dict)
+nx.write_gexf(G, f"gephiGraphs/{parent_directory}_call_graph.gexf")
+visualize_call_graph(G)
