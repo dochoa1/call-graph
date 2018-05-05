@@ -13,8 +13,23 @@ from collections import Iterable as Iterable
 from sys import argv
 
 
-def visualize_call_graph(graph_dict):
-    """Takes a graph dictionary and visualizes using matplotlib."""
+# ---- Visualization ----
+
+def visualize_call_graph(G):
+    """Takes a networkx graph and visualizes using matplotlib."""
+
+    pos = nx.spring_layout(G)
+    nx.draw(G, pos, font_size=16, with_labels=False) # place labels seperately above node
+    for p in pos:  # Raise text positions
+        pos[p][1] += 0.1
+    nx.draw_networkx_labels(G, pos)
+    plt.show()
+
+
+# ------------------------------------------------------------------------------
+# ----NetworkX ----
+
+def create_networkx_graph(graph_dict):
     G = nx.DiGraph()  # Directed graph
 
     for java_class, class_dict in graph_dict.items():
@@ -23,13 +38,7 @@ def visualize_call_graph(graph_dict):
             G.add_node(callee_method_name)
             for called_method_name in called_methods:
                 G.add_edge(callee_method_name, called_method_name)
-
-    pos = nx.spring_layout(G)
-    nx.draw(G, pos, font_size=16, with_labels=False) # place labels seperately above node
-    for p in pos:  # Raise text positions
-        pos[p][1] += 0.1
-    nx.draw_networkx_labels(G, pos)
-    plt.show()
+    return G
 
 
 def construct_method_declarations_list(declarations):
@@ -42,6 +51,8 @@ def construct_method_declarations_list(declarations):
             method_declarations.append(declaration)
     return method_declarations
 
+# ------------------------------------------------------------------------------
+# ---- Call Graph Helper Methods ----
 
 def get_methods_ids_that_match_name(name, graph_dict):
     """Takes a method name and a graph_dict and returns a list of method_ids in the graph_dict
@@ -58,6 +69,19 @@ def get_methods_ids_that_match_name(name, graph_dict):
 def create_method_id(class_name, name):
     return class_name + '.' + name
 
+# ------------------------------------------------------------------------------
+# ---- Utilities ----
+
+def flatten_attributes(l):
+    """Utility function to because certain Statements are blocks with a list of statements as their attributes"""
+    flattened_list = []
+    for elem in l:
+        if isinstance(elem, Iterable) and not isinstance(elem, (str, bytes)):
+            flattened_list.extend(elem)
+        elif elem is not None:
+            flattened_list.append(elem)
+    return flattened_list
+
 
 def getopts(argv):
     """Collect command-line options in a dictionary. From https://gist.github.com/dideler/2395703"""
@@ -68,6 +92,8 @@ def getopts(argv):
         argv = argv[1:]  # Reduce the argument list by copying it starting from index 1.
     return opts
 
+# ------------------------------------------------------------------------------
+# ---- Graph Dictionary Construction ----
 
 def create_defined_methods_and_fields_dict(java_classes):
     """Takes a list of classes and creates a graph_dict that includes the methods defined in each class."""
@@ -110,17 +136,6 @@ def construct_class_dict(declarations, class_name, graph_dict):
 
 
 recursive_statements = {javalang.tree.WhileStatement, javalang.tree.BlockStatement, javalang.tree.IfStatement, javalang.tree.BinaryOperation, javalang.tree.Creator}
-
-
-# Utility function to because certain Statements are blocks with a list of statements as their attributes
-def flatten_attributes(l):
-    flattened_list = []
-    for elem in l:
-        if isinstance(elem, Iterable) and not isinstance(elem, (str, bytes)):
-            flattened_list.extend(elem)
-        elif elem is not None:
-            flattened_list.append(elem)
-    return flattened_list
 
 
 def add_method(class_name, expression, graph_dict):
@@ -173,10 +188,12 @@ def construct_called_methods(class_name, graph_dict, called_methods, body):
                                                                     called_methods, flatten_attributes(statement_attributes)))
     return called_methods
 
+# ------------------------------------------------------------------------------
+# ---- Main ----
 
 parent_directory = "StevenBreakout"
 myargs = getopts(argv)
-if '-d' in myargs:  # Example usage.
+if '-d' in myargs:
     parent_directory = myargs['-d']
 
 
@@ -199,4 +216,8 @@ for java_class in java_classes:
     construct_class_dict(declarations_list, java_class.name, graph_dict)  # TODO: Rename method
 
 print(f'Graph Dictionary {graph_dict}')
-visualize_call_graph(graph_dict)
+G = create_networkx_graph(graph_dict)
+nx.write_gexf(G, f"gephiGraphs/{parent_directory}_call_graph.gexf")
+visualize_call_graph(G)
+
+# ------------------------------------------------------------------------------
