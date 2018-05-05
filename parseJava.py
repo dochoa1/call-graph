@@ -54,6 +54,12 @@ def get_methods_ids_that_match_name(name, graph_dict):
                 matched_method_ids.append(method.id)
     return matched_method_ids
 
+def create_method_id(class_name, name, parameter_types):
+    method_id = class_name + '.' + name
+    for parameter_type in parameter_types:
+        method_id.append('.' + parameter_type)
+    return method_id
+
 def create_defined_methods_and_fields_dict(java_classes):
     """Takes a list of classes and creates a graph_dict that includes the methods defined in each class."""
 
@@ -77,7 +83,8 @@ def create_defined_methods_and_fields_dict(java_classes):
             # TODO: Fill in modifier parameters
             # method_declaration attrs: ['documentation', 'modifiers', 'annotations', 'type_parameters', 'return_type', 'name', 'parameters', 'throws', 'body']
             # Method Initializer: def __init__(self, name, class_name, is_final, is_static, access_modifier, parameter_types):
-            method = Method(method_declaration.name, class_name, False, False, AccessModifier.PUBLIC, [])
+            method_id = create_method_id(class_name, method_declaration.name, [])
+            method = Method(method_id, method_declaration.name, class_name, False, False, AccessModifier.PUBLIC, [])
             class_dict["defined_methods"].append(method)
 
         # TODO: add properties now?
@@ -94,14 +101,12 @@ def construct_class_dict(declarations, class_name, graph_dict):
     method_declarations = declarations_dict["MethodDeclaration"]
 
     for method_declaration in method_declarations:
-        # constructing a Method object just to use it's id.
-        # TODO: make id a method of this class and then call it here instead of constructing a method
-        temp_method = Method(method_declaration.name, class_name, False, False, AccessModifier.PUBLIC, [])
+        method_id = create_method_id(class_name, method_declaration.name, [])
 
         print(f'++++> {method_declaration.name} is declared.')
 
         # Now figure out which methods this method calls and add to called_methods
-        class_dict["called_methods"][temp_method.id] = set()
+        class_dict["called_methods"][method_id] = set()
 
         # TODO: Iterating over the method_declaration.body is insufficient here.
         # For instance, the run method has one expression which is a while statement.
@@ -118,11 +123,11 @@ def construct_class_dict(declarations, class_name, graph_dict):
 
                     if len(matched_method_ids) == 0:  # Method may have been defined in super class. We are constructing a partial graph
                         # FIXME: If we add parameters to ID, we'll have a problem here
-                        class_dict["called_methods"][temp_method.id].add(class_name + '.' + expression.member)
+                        class_dict["called_methods"][method_id].add(class_name + '.' + expression.member)
 
                     for matched_method_id in matched_method_ids:
                         print("-----> Adding ", matched_method_id)
-                        class_dict["called_methods"][temp_method.id].add(matched_method_id)
+                        class_dict["called_methods"][method_id].add(matched_method_id)
             except AttributeError:
                 continue
 
