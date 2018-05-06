@@ -11,7 +11,9 @@ import matplotlib.pyplot as plt
 import glob
 from collections import Iterable as Iterable
 from sys import argv
+import random
 
+# ---- Globals ----
 
 class CallGraph:
 
