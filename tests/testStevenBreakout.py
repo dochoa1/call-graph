@@ -39,7 +39,7 @@ class TestStevenBreakoutMethods(unittest.TestCase):
         self.assertEqual(actual_methods, expected_methods)
 
     def test_Ball_setDxPositive(self):
-        expected_methods = {'Ball.setDx', 'Ball.getDx'}
+        expected_methods = {'Ball.setDx', 'Ball.abs', 'Ball.getDx'}
         actual_methods = self.graph_dict['Ball']['called_methods']['Ball.setDxPositive']
         self.assertEqual(actual_methods, expected_methods)
 
@@ -84,12 +84,13 @@ class TestStevenBreakoutMethods(unittest.TestCase):
         self.assertEqual(actual_methods, expected_methods)
 
     def test_BreakoutProgram_checkBottomWall(self):
-        expected_methods = {'Ball.getHeight', 'Ball.getY'}
+        expected_methods = {'BreakoutProgram.getHeight', 'BreakoutProgram.getY'}
         actual_methods = self.graph_dict['BreakoutProgram']['called_methods']['BreakoutProgram.checkBottomWall']
         self.assertEqual(actual_methods, expected_methods)
 
     def test_BreakoutProgram_keyPressed(self):
-        expected_methods = {'BreakoutProgram.getKeyCode', 'Bar.getX', 'Bar.moveLeft', 'Bar.getWidth', 'Bar.moveRight'}
+        expected_methods = {'BreakoutProgram.getKeyCode', 'BreakoutProgram.getX', 'Bar.moveLeft',
+                            'BreakoutProgram.getWidth', 'Bar.moveRight'}
         actual_methods = self.graph_dict['BreakoutProgram']['called_methods']['BreakoutProgram.keyPressed']
         self.assertEqual(actual_methods, expected_methods)
 

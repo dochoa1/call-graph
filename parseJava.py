@@ -138,7 +138,7 @@ class CallGraph:
             class_dict["called_methods"][method_id] = self.construct_called_methods(class_name, graph_dict, set(), method_declaration.body)
 
 
-    recursive_statements = {javalang.tree.WhileStatement, javalang.tree.BlockStatement, javalang.tree.IfStatement, javalang.tree.BinaryOperation, javalang.tree.Creator}
+    recursive_statements = {javalang.tree.WhileStatement, javalang.tree.BlockStatement, javalang.tree.IfStatement, javalang.tree.BinaryOperation, javalang.tree.Creator, javalang.tree.SwitchStatementCase}
 
 
     def add_method(self, class_name, expression, graph_dict):
@@ -167,15 +167,23 @@ class CallGraph:
                 expression = method_expression.expression
                 if isinstance(expression, javalang.tree.MethodInvocation):  # For each statement that invokes a method
                     called_methods.update(self.add_method(class_name, expression, graph_dict))
+                    called_methods.update(self.construct_called_methods(class_name, graph_dict,
+                                                                    called_methods, expression.arguments))  # MethodInvocations may have other nested method Invocations
 
-                if isinstance(expression, javalang.tree.Assignment):
+                if isinstance(expression, (javalang.tree.Assignment, javalang.tree.BinaryOperation)):
                     statement_attributes = [getattr(expression, attr) for attr in expression.attrs]
                     called_methods.update(self.construct_called_methods(class_name, graph_dict,
                                                                     called_methods, statement_attributes))
 
+                if isinstance(method_expression, javalang.tree.SwitchStatement):
+                    called_methods.update(self.construct_called_methods(class_name, graph_dict,
+                                                                    called_methods, method_expression.cases))
+
             except AttributeError:
                 if isinstance(method_expression, javalang.tree.MethodInvocation):  # Sometimes expression is a MethodInvocation itself
                     called_methods.update(self.add_method(class_name, method_expression, graph_dict))
+                    called_methods.update(self.construct_called_methods(class_name, graph_dict,
+                                                                    called_methods, method_expression.arguments))  # MethodInvocations may have other nested method Invocations
 
                 if isinstance(method_expression, tuple(self.recursive_statements)):
                     print("Recursing into: {}".format(method_expression))
@@ -186,7 +194,7 @@ class CallGraph:
                         called_methods.update(self.construct_called_methods(class_name, graph_dict,
                                                                         called_methods, statement_attributes))
 
-                    elif isinstance(method_expression, (javalang.tree.BlockStatement, javalang.tree.Creator)):
+                    elif isinstance(method_expression, (javalang.tree.BlockStatement, javalang.tree.Creator, javalang.tree.SwitchStatementCase)):
                         called_methods.update(self.construct_called_methods(class_name, graph_dict,
                                                                         called_methods, self.flatten_attributes(statement_attributes)))
         return called_methods
@@ -220,7 +228,7 @@ class CallGraph:
             declarations_list = java_class.body  # The declarations in each class as a list
             self.construct_class_dict(declarations_list, java_class.name, graph_dict)  # TODO: Rename method
 
-        print(f'Graph Dictionary {graph_dict}')
+        print('Graph Dictionary {}'.format(graph_dict))
         G = self.create_networkx_graph(graph_dict)
         nx.write_gexf(G, f"gephiGraphs/{parent_directory}_call_graph.gexf")
         self.visualize_call_graph(G)
