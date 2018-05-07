@@ -131,8 +131,6 @@ class CallGraph:
         for method_declaration in method_declarations:
             method_id = self.create_method_id(class_name, method_declaration.name)
 
-            print(f'++++++++++++++++++++++++++++++++++++++++++++++++++++> {method_declaration.name} is declared.')
-
             # Now figure out which methods this method calls and add to called_methods
             class_dict["called_methods"][method_id] = self.construct_called_methods(class_name, graph_dict, set(), method_declaration.body)
 
@@ -152,7 +150,6 @@ class CallGraph:
             methods.add(class_name + '.' + expression.member)
 
         for matched_method_id in matched_method_ids:
-            print("-----> Adding ", matched_method_id)
             methods.add(matched_method_id)
         return methods
 
@@ -185,7 +182,6 @@ class CallGraph:
                                                                     called_methods, method_expression.arguments))  # MethodInvocations may have other nested method Invocations
 
                 if isinstance(method_expression, tuple(self.recursive_statements)):
-                    print("Recursing into: {}".format(method_expression))
 
                     statement_attributes = [getattr(method_expression, attr) for attr in method_expression.attrs]
 
