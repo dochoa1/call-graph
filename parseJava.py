@@ -17,7 +17,7 @@ import random
 
 class CallGraph:
 
-    # ---- Visualization ----
+    # ---- Simple Visualization for Debuggins ----
     def visualize_call_graph(self, G):
         """Takes a networkx graph and visualizes using matplotlib."""
 
@@ -60,7 +60,6 @@ class CallGraph:
     def get_methods_ids_that_match_name(self, name, graph_dict):
         """Takes a method name and a graph_dict and returns a list of method_ids in the graph_dict
         that match the method name."""
-        # TODO: This isn't very efficient
         matched_method_ids = []
         for class_name, class_dict in graph_dict.items():
             for method in class_dict["defined_methods"]:
@@ -226,12 +225,12 @@ class CallGraph:
 
         for java_class in java_classes:
             declarations_list = java_class.body  # The declarations in each class as a list
-            self.construct_class_dict(declarations_list, java_class.name, graph_dict)  # TODO: Rename method
+            self.construct_class_dict(declarations_list, java_class.name, graph_dict)
 
         print('Graph Dictionary {}'.format(graph_dict))
         G = self.create_networkx_graph(graph_dict)
         nx.write_gexf(G, f"gephiGraphs/{parent_directory}_call_graph.gexf")
-        self.visualize_call_graph(G)
+        # self.visualize_call_graph(G)  # Primitive visualization for Debugging
 
     # ------------------------------------------------------------------------------
 
